@@ -4,7 +4,7 @@
 Player::Player(const std::string& player) {
     std::istringstream iss(player);
     
-    // Extract name and age from the input string
+    // Extract name and age from the input string found the better implementation thru StackEx by sstream
     if (!(iss >> name >> age)) {
         // Handle error if parsing fails
         name = "Unknown";
