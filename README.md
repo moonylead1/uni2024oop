@@ -7,6 +7,7 @@ This repository contains solutions and tasks related to the Object-Oriented Prog
 - **Course Name**: Object-Oriented Programming (OOP)
 - **Instructor**: Kuevda Yullia Valeriivna
 - **University**: KPI (Kyiv Polytechnic Institute)
+- **Faculty**: Institute of Applied Systems Analysis (IASA)
 - **Year**: 2024
 
 The course focuses on the fundamental concepts of OOP, such as:
