@@ -1,3 +1,6 @@
+#ifndef TRAINER_H
+#define TRAINER_H
+
 #include <string>
 
 class Trainer
@@ -5,14 +8,12 @@ class Trainer
 private:
     std::string name;
 public:
-    Trainer(/* args */);
+    Trainer(std::string);
+    std::string get_name() const;
     ~Trainer();
 };
 
-Trainer::Trainer(/* args */)
-{
-}
+#endif
 
-Trainer::~Trainer()
-{
-}
+
+
