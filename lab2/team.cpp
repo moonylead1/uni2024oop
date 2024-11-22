@@ -21,3 +21,8 @@ std::vector<Player> Team::get_players() const {
 Trainer Team::get_trainer() const {
     return trainer;
 }
+
+Trainer Team::set_trainer(Trainer trainer){
+    this->trainer = trainer;
+    return trainer;
+}

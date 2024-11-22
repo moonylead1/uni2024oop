@@ -1,4 +1,5 @@
 #include "Trainer.h"
+#include "Team.h"
 #include <string>
 
 //default constructor

@@ -18,6 +18,7 @@ public:
     std::string Team::get_name() const;
     std::vector<Player> Team::get_players() const;
     Trainer Team::get_trainer() const;
+    Trainer Team::set_trainer(Trainer trainer);
     ~Team();
 };
 

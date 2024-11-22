@@ -2,6 +2,7 @@
 #define TRAINER_H
 
 #include <string>
+#include "Team.h"
 
 class Trainer
 {

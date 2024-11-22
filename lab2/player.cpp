@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(const std::string& name, int age, const std::string& position, int touchdowns, Team team) : name(name), age(age), position(position), touchdowns(touchdowns), team(team) {
+Player::Player(const std::string& name, int age, const std::string& position, int touchdowns, Team team, bool ingame) : name(name), age(age), position(position), touchdowns(touchdowns), team(team) {
 }
 
 Player::~Player() {}
@@ -23,4 +23,13 @@ int Player::get_touchdowns() const {
 
 Team Player::get_team() const {
     return team;
+}
+
+bool Player::get_ingame() const {
+    return ingame;
+}
+
+bool Player::set_ingame(bool ingame) {
+    this->ingame = ingame;
+    return ingame;
 }
