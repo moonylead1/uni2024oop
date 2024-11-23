@@ -10,10 +10,9 @@ Team::Team(std::string name, std::vector<Player*> players, Trainer* trainer) :
 
 //default destructor
 Team::~Team() {
-    for (auto* player : players) {
-        delete player;
-    }
+    // clear the vector but not obj
     players.clear();
+    trainer = nullptr;
 }
 
 //basic getters
@@ -21,7 +20,7 @@ std::string Team::get_name() const {
     return name;
 }
 
-std::vector<Player*> Team::get_players() const {
+std::vector<Player*>& Team::get_players() {
     return players;
 }
 
@@ -29,6 +28,4 @@ Trainer* Team::get_trainer() const {
     return trainer;
 }
 
-void Team::set_trainer(Trainer* trainer){
-    this->trainer = trainer;
-}
+

@@ -41,7 +41,14 @@ void menu_display() {
     std::cout << "7.\tAdd trainer\n";
     std::cout << "8.\tRemove trainer\n";
     std::cout << "9.\tShow the youngest and oldest player\n";
-    std::cout << "10.\tExit\n";
+    std::cout << "10.\tAdd team\n";
+    std::cout << "11.\tRemove team\n";
+    std::cout << "12.\tEngage player to the team\n";
+    std::cout << "13.\tDisengage player from team\n";
+    std::cout << "14.\tShow teams\n";
+    std::cout << "15.\tEngage trainer to team\n";
+    std::cout << "16.\tDisengage trainer from team\n";
+    std::cout << "17.\tExit\n";
     std::cout << "Enter your choice: ";
 }
 
@@ -251,7 +258,199 @@ void menu_action(int choice) {
             }
             break;
         }
+
         case 10: {
+            std::cout << "Add team -> Adding team: \n";
+            std::string name;
+            std::cout << "Enter team name: ";
+            std::getline(std::cin, name);
+            teams.emplace_back(name);
+            std::cout << "Team " << name << " has been added.\n";
+            break;
+        }
+        
+        case 11: {
+            std::cout << "Remove team -> Removing team:\n";
+            if (teams.empty()) {
+                std::cout << "Teams list is empty, no way you can remove nothing. Try creating a team first.\n";
+            } else {
+                int choice;
+                for (int i = 0; i < teams.size(); i++) {
+                    std::cout << i + 1 << ". " << teams[i].get_name() << std::endl;
+                }
+                std::cout << "Enter team number: ";
+                std::cin >> choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
+                if (choice < 1 || choice > teams.size()) {
+                    std::cout << "Invalid choice. Please try again.\n";
+                    break;
+                }
+                std::string team_name = teams[choice - 1].get_name(); // store name before erasing
+                teams.erase(teams.begin() + choice - 1);
+                std::cout << "Team " << team_name << " has been removed.\n";
+            }
+            break;
+        }
+
+        case 12: { // add player to team
+            std::cout << "Engage player to the team -> Adding player to team:\n";
+            if (players.empty()) {
+                std::cout << "Players list is empty. Try creating a player first.\n";
+            }  else if (teams.empty()) {
+                std::cout << "Teams list is empty, no way you can add players to nothing. Try creating a team first.\n";
+            } else {
+                int choice;
+                for (int i = 0; i < players.size(); i++) {
+                    std::cout << i + 1 << ". " << players[i].get_name() << std::endl;
+                }
+                std::cout << "Enter player number: ";
+                std::cin >> choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
+                if (choice < 1 || choice > players.size()) {
+                    std::cout << "Invalid choice. Please try again.\n";
+                    break;
+                }
+
+                int team_choice;
+                for (int i = 0; i < teams.size(); i++) {
+                    std::cout << i + 1 << ". " << teams[i].get_name() << std::endl;
+                }
+                std::cout << "Enter team number: ";
+                std::cin >> team_choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
+                if (team_choice < 1 || team_choice > teams.size()) {
+                    std::cout << "Invalid choice. Please try again.\n";
+                    break;
+                }
+                std::string team_name = teams[team_choice - 1].get_name(); // store name before erasing
+                players[choice - 1].set_team(&teams[team_choice - 1]);
+                std::cout << "Player " << players[choice - 1].get_name() << " has been added to team " << team_name << ".\n";
+            }
+            break;
+        
+        case 13: {
+            std::cout << "Disengage player from team -> Removing player from team:\n";
+            if (players.empty()) {
+                std::cout << "Players list is empty. Try creating a player first.\n";
+            }  else if (teams.empty()) {
+                std::cout << "Teams list is empty, no way you can remove players from nothing. Try creating a team first.\n";
+            } else {
+                int choice;
+                for (int i = 0; i < players.size(); i++) {
+                    std::cout << i + 1 << ". " << players[i].get_name() << std::endl;
+                }
+                std::cout << "Enter player number: ";
+                std::cin >> choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
+                if (choice < 1 || choice > players.size()) {
+                    std::cout << "Invalid choice. Please try again.\n";
+                    break;
+                }
+                players[choice - 1].set_team(team_none);
+                std::cout << "Player " << players[choice - 1].get_name() << " has been removed from team.\n";
+            }
+            break;
+        }
+
+        case 14: {
+            std::cout << "Show teams -> Showing teams:\n";
+            if (teams.empty()) {
+                std::cout << "Teams list is empty. Try creating a team first.\n";
+            } else {
+                for (int i = 0; i < teams.size(); i++) {
+                    std::cout << i + 1 << ". " << teams[i].get_name() << std::endl;
+                }
+            }
+            break;
+        }
+
+        case 15: {
+            std::cout << "Engage trainer to team -> Adding trainer to team:\n";
+            if (trainers.empty()) {
+                std::cout << "Trainers list is empty. Try creating a trainer first.\n";
+            }  else if (teams.empty()) {
+                std::cout << "Teams list is empty, no way you can add trainers to nothing. Try creating a team first.\n";
+            } else {
+                int choice;
+                for (int i = 0; i < trainers.size(); i++) {
+                    std::cout << i + 1 << ". " << trainers[i].get_name() << std::endl;
+                }
+                std::cout << "Enter trainer number: ";
+                std::cin >> choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
+                if (choice < 1 || choice > trainers.size()) {
+                    std::cout << "Invalid choice. Please try again.\n";
+                    break;
+                }
+
+                int team_choice;
+                for (int i = 0; i < teams.size(); i++) {
+                    std::cout << i + 1 << ". " << teams[i].get_name() << std::endl;
+                }
+                std::cout << "Enter team number: ";
+                std::cin >> team_choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
+                if (team_choice < 1 || team_choice > teams.size()) {
+                    std::cout << "Invalid choice. Please try again.\n";
+                    break;
+                }
+
+                teams[team_choice - 1].set_trainer(&trainers[choice - 1]);
+                std::cout << "Trainer " << trainers[choice - 1].get_name() << " has been added to team " << teams[team_choice - 1].get_name() << ".\n";
+                
+            }
+            break;
+        }
+
+        case 16: {
+            std::cout << "Disengage trainer from team -> Removing trainer from team:\n";
+            if (trainers.empty()) {
+                std::cout << "Trainers list is empty. Try creating a trainer first.\n";
+            }  else if (teams.empty()) {
+                std::cout << "Teams list is empty, no way you can remove trainers from nothing. Try creating a team first.\n";
+            } else {
+                int choice;
+                for (int i = 0; i < trainers.size(); i++) {
+                    std::cout << i + 1 << ". " << trainers[i].get_name() << std::endl;
+                }
+                std::cout << "Enter trainer number: ";
+                std::cin >> choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
+                if (choice < 1 || choice > trainers.size()) {
+                    std::cout << "Invalid choice. Please try again.\n";
+                    break;
+                }
+
+                int team_choice;
+                for (int i = 0; i < teams.size(); i++) {
+                    std::cout << i + 1 << ". " << teams[i].get_name() << std::endl;
+                }
+                std::cout << "Enter team number: ";
+                std::cin >> team_choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
+                if (team_choice < 1 || team_choice > teams.size()) {
+                    std::cout << "Invalid choice. Please try again.\n";
+                    break;
+                }
+
+                teams[team_choice - 1].set_trainer(nullptr);
+                std::cout << "Trainer " << trainers[choice - 1].get_name() << " has been removed from team " << teams[team_choice - 1].get_name() << ".\n";
+            }
+            break;
+            }
+            
+        }
+        
+
+        case 17: {
             std::cout << "Exit\n";
             std::cout << "Are you sure you want to exit? (yes/no): ";
             std::string option;
@@ -545,9 +744,6 @@ int main() {
     while (true) {
         menu_event();
     }
-    
-    //writing files
-    
 
     return 0;
 }
