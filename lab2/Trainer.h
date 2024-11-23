@@ -9,7 +9,7 @@ class Trainer
 private:
     std::string name;
 public:
-    Trainer(std::string);
+    Trainer(const std::string& name);
     std::string get_name() const;
     ~Trainer();
 };

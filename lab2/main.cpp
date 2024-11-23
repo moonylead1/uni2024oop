@@ -1,4 +1,4 @@
-//as i ve seen in task ill better use strcpy bc it is more efficient in understanding text docs
+//as i ve seen in task ill better use substr
 #include "Team.h"
 #include "Trainer.h"
 #include "Player.h"
@@ -7,13 +7,16 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <limits>
 
 //globals:
 std::vector<Team> teams;
 std::vector<Trainer> trainers;
 std::vector<Player> players;
 
-Team team_none("No_team", std::vector<Player>(), Trainer(""));
+Team* team_none = nullptr;
+
+void doc_output_handler();
 
 //menu must contain: 
 //1. SHOW : show players (showing the table with all players currently written down in file)
@@ -28,7 +31,7 @@ Team team_none("No_team", std::vector<Player>(), Trainer(""));
 //8. OPER : EXIT
 
 void menu_display() {
-    std::cout << "Menu:\n";
+    std::cout << "\nMenu:\n";
     std::cout << "1.\tShow players\n";
     std::cout << "2.\tShow players in game\n";
     std::cout << "3.\tShow trainers\n";
@@ -44,6 +47,8 @@ void menu_display() {
 
 //menu actions with its respective tasks
 void menu_action(int choice) {
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clearing input buffer after reading choice
+
     switch (choice) {
         case 1:
             std::cout << "Show players -> List of players:\n";
@@ -52,10 +57,11 @@ void menu_action(int choice) {
                 break;
             } else {
                 for (const auto& player : players) {
-                    std::cout << player.get_name() << "\t" << player.get_age() << "\t" << player.get_position() << "\t" << player.get_touchdowns() << "\t" << player.get_team().get_name() << std::endl;
+                    std::cout << player.get_name() << "\t" << player.get_age() << "\t" << player.get_position() << "\t" << player.get_touchdowns() << "\t" << player.get_team()->get_name() << std::endl;
                 }
             }
             break;
+
         case 2:
             std::cout << "Show players in game -> List of players in-game:\n";
             if (players.empty()) {
@@ -65,7 +71,8 @@ void menu_action(int choice) {
                 int found_status = 0;
                 for (const auto& player : players) {
                     if (player.get_ingame() == true) {
-                        std::cout << player.get_name() << "\t" << player.get_age() << "\t" << player.get_position() << "\t" << player.get_touchdowns() << "\t" << player.get_team().get_name() << std::endl;
+                        found_status++;
+                        std::cout << player.get_name() << "\t" << player.get_age() << "\t" << player.get_position() << "\t" << player.get_touchdowns() << "\t" << player.get_team()->get_name() << std::endl;
                     }
                 }
                 if (found_status == 0) {
@@ -73,6 +80,7 @@ void menu_action(int choice) {
                 }
             }
             break;
+
         case 3:
             std::cout << "Show trainers -> List of trainers:\n";
             if (trainers.empty()) {
@@ -84,6 +92,7 @@ void menu_action(int choice) {
                 }
             }
             break;
+            
         case 4:
             std::cout << "Move player to game -> Moving player: \n";
             if (players.empty()) {
@@ -91,7 +100,7 @@ void menu_action(int choice) {
                 break;
             } else { 
                 int choice;
-                std::cout << "Enter player number: ";
+                std::cout << "Enter player number: \n";
                 for (int i = 0; i < players.size(); i++) {
                     std::cout << i + 1 << ". " << players[i].get_name() << std::endl;
                 }
@@ -104,23 +113,31 @@ void menu_action(int choice) {
                 std::cout << "Player " << players[choice - 1].get_name() << " has been moved to game.\n"; 
             }
             break;
-        case 5: { // using block here
+
+        case 5: {
             std::cout << "Add player -> Adding player:\n";
             std::string option;
             do {
                 std::string name, position, team;
                 int age, touchdowns;
+                
                 std::cout << "Enter player name: ";
                 std::getline(std::cin, name);
+                
                 std::cout << "Enter player age: ";
                 std::cin >> age;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
                 std::cout << "Enter player position: ";
                 std::getline(std::cin, position);
+                
                 std::cout << "Enter player touchdowns: ";
                 std::cin >> touchdowns;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
                 std::cout << "Enter player team: ";
                 std::getline(std::cin, team);
-
+                
                 int found_team = -1;
                 for (int i = 0; i < teams.size(); i++) {
                     if (teams[i].get_name() == team) {
@@ -128,38 +145,49 @@ void menu_action(int choice) {
                         break;
                     }
                 }
+                
                 if (found_team == -1) {
+                    // add player to team_none
                     Player player(name, age, position, touchdowns, team_none, false);
                     players.push_back(player);
-                } else { 
-                    Player player(name, age, position, touchdowns, teams[found_team], false);
+                    std::cout << "Player added to No_team.\n";
+                } else {
+                    // add player to existing team
+                    Player player(name, age, position, touchdowns, &teams[found_team], false);
                     players.push_back(player);
+                    std::cout << "Player added to team " << team << ".\n";
                 }
                 
                 std::cout << "Do you want to add another player? (yes/no): ";
                 std::getline(std::cin, option);
             } while (option != "no" && option != "No" && option != "NO" && option != "n" && option != "N");
             break;
-            }
-        case 6:
+        }
+
+        case 6: {
             std::cout << "Remove player -> Removing player: \n";
             if (players.empty()) {
                 std::cout << "Players list is empty, no way you can remove nothing. Try creating a player first.\n";
             } else {
                 int choice;
-                std::cout << "Enter player number: ";
                 for (int i = 0; i < players.size(); i++) {
                     std::cout << i + 1 << ". " << players[i].get_name() << std::endl;
                 }
+                std::cout << "Enter player number: ";
                 std::cin >> choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
                 if (choice < 1 || choice > players.size()) {
                     std::cout << "Invalid choice. Please try again.\n";
                     break;
                 }
+                std::string player_name = players[choice - 1].get_name(); // memorizing name before erasing
                 players.erase(players.begin() + choice - 1);
-                std::cout << "Player " << players[choice - 1].get_name() << " has been removed.\n";
+                std::cout << "Player " << player_name << " has been removed.\n";
             }
             break;
+        }
+        
         case 7: {
             std::cout << "Add trainer -> Adding trainer: \n";
             std::string name;
@@ -168,73 +196,93 @@ void menu_action(int choice) {
             Trainer trainer(name);
             trainers.push_back(trainer);
             std::cout << "Trainer " << name << " has been added.\n";
-            }
             break;
-        case 8:
+        }
+        
+        case 8: {
             std::cout << "Remove trainer -> Removing trainer:\n";
             if (trainers.empty()) {
                 std::cout << "Trainers list is empty, no way you can remove nothing. Try creating a trainer first.\n";
             } else {
                 int choice;
-                std::cout << "Enter trainer number: ";
                 for (int i = 0; i < trainers.size(); i++) {
                     std::cout << i + 1 << ". " << trainers[i].get_name() << std::endl;
                 }
+                std::cout << "Enter trainer number: ";
                 std::cin >> choice;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                
                 if (choice < 1 || choice > trainers.size()) {
                     std::cout << "Invalid choice. Please try again.\n";
                     break;
                 }
+                std::string trainer_name = trainers[choice - 1].get_name(); // store name before erasing
                 trainers.erase(trainers.begin() + choice - 1);
-                std::cout << "Trainer " << trainers[choice - 1].get_name() << " has been removed.\n";
+                std::cout << "Trainer " << trainer_name << " has been removed.\n";
             }
             break;
-        case 9:
-            std::cout << "Show the youngest and oldest player -> The youngest and oldest player are:\n";
+        }
+        
+        case 9: {
+            std::cout << "Show the youngest and oldest player:\n";
             if (players.size() < 2) {
-                std::cout << "Players list is empty. Try creating at least two players first.\n";
+                std::cout << "Looks there is not enough players in the list. Try creating at least two players first.\n";
                 break;
             } else {
-                int min_age = players[0].get_age();
-                int max_age = players[0].get_age();
-                std::string min_name = players[0].get_name();
-                std::string max_name = players[0].get_name();
-                for (const auto& player : players) {
-                    if (player.get_age() < min_age) {
-                        min_age = player.get_age();
-                        min_name = player.get_name();
+                // track indices instead of pointers
+                size_t youngest_idx = 0;
+                size_t oldest_idx = 0;
+                
+                // find youngest and oldest players logic
+                for (size_t i = 1; i < players.size(); i++) {
+                    if (players[i].get_age() < players[youngest_idx].get_age()) {
+                        youngest_idx = i;
                     }
-                    if (player.get_age() > max_age) {
-                        max_age = player.get_age();
-                        max_name = player.get_name();
+                    if (players[i].get_age() > players[oldest_idx].get_age()) {
+                        oldest_idx = i;
                     }
                 }
-                std::cout << "Youngest player: " << min_name << " age is: " << min_age << std::endl;
-                std::cout << "Oldest player: " << max_name << " age is: " << max_age << std::endl;
+                
+                // output results
+                std::cout << "The youngest player is " << players[youngest_idx].get_name() 
+                        << " with " << players[youngest_idx].get_age() << " years old.\n";
+                std::cout << "The oldest player is " << players[oldest_idx].get_name() 
+                        << " with " << players[oldest_idx].get_age() << " years old.\n";
             }
             break;
+        }
         case 10: {
             std::cout << "Exit\n";
             std::cout << "Are you sure you want to exit? (yes/no): ";
             std::string option;
             std::getline(std::cin, option);
             if (option == "yes" || option == "Yes" || option == "YES" || option == "y" || option == "Y") {
-                exit(0);
-            }
+                doc_output_handler();
+                exit(1); // to exit loop
             }
             break;
-        default:
-            std::cout << "Invalid choice! Check your input.\n";
+        }
+        
+        default: {
+            std::cout << "Invalid choice. Please try again.\n";
             break;
+        }
     }
 }
 
 //menu combined startup
 void menu_event() {
-    menu_display();
     int user_choice;
-    std::cin >> user_choice;
-    menu_action(user_choice);
+    do {
+        menu_display();
+        if (!(std::cin >> user_choice)) {
+            std::cin.clear(); // Clear error flags
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear invalid input // buffer overflow handling
+            std::cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+        menu_action(user_choice);
+    } while (true);
 }
 
 //Text Docs Scan
@@ -297,13 +345,14 @@ bool doc_setup_teams_file() {
                 found = name.find(";");
                 if (found != std::string::npos) {
                     name = name.substr(0, found);
-                    Team team(name, std::vector<Player>(), Trainer(""));
-                    teams.push_back(team);
+                    Team* team = new Team(name, std::vector<Player*>(), nullptr);
+                    teams.push_back(*team);
                 }
             }
         }
         file.close();
     }
+    return true;
 }
 
 
@@ -344,18 +393,19 @@ bool doc_setup_players_file() { //holy fuck pls work itryharded too much
                                                     if (found != std::string::npos) {
                                                         team = team.substr(0, found);
                                                         bool found_team = false;
-                                                        for (auto& t : teams) {
-                                                            if (t.get_name() == team) {
-                                                                Player player(name, std::stoi(age), position, std::stoi(touchdowns), t, false);
-                                                                players.push_back(player);
+                                                        for (int t = 0; t < teams.size(); t++) {
+                                                            if (teams[t].get_name() == team) { // and here
+                                                                Player* player = new Player(name, std::stoi(age), position, std::stoi(touchdowns), &teams[t], false);
+                                                                players.push_back(*player);
                                                                 found_team = true;
                                                                 break;
                                                             }
                                                         }
-                                                        if (!found_team){
-                                                            Player player(name, std::stoi(age), position, std::stoi(touchdowns), team_none, false);
-                                                            team_none.get_players().push_back(player);
-                                                            players.push_back(player);
+                                                        if (!found_team){  ///here was a problem
+                                                            Player* player = new Player(name, std::stoi(age), position, std::stoi(touchdowns), team_none, false);
+
+                                                            team_none->get_players().push_back(player);
+                                                            players.push_back(*player);
                                                         }
                                                     }
                                                 }
@@ -372,6 +422,7 @@ bool doc_setup_players_file() { //holy fuck pls work itryharded too much
         }
         file.close();
     }
+    return true;
 }
 
 bool doc_setup_trainers_file() {
@@ -396,7 +447,7 @@ bool doc_setup_trainers_file() {
                             bool found_team = false;
                             for (auto& t : teams) {
                                 if (t.get_name() == team) {
-                                    t.set_trainer(trainer);
+                                    t.set_trainer(&trainer);
                                     found_team = true;
                                     break;
                                 }
@@ -408,8 +459,34 @@ bool doc_setup_trainers_file() {
         }
         file.close();
     }
+    return true;
 }
 
+void doc_output_handler() {
+    std::ofstream file("Players_table.txt");
+    for (auto& player : players) {
+        file << "Name:" << player.get_name() << ";";
+        file << "Age:" << player.get_age() << ";";
+        file << "Position:" << player.get_position() << ";";
+        file << "Touchdowns:" << player.get_touchdowns() << ";";
+        file << "Team:" << player.get_team()->get_name() << ";";
+        file << "\n";
+    }
+    file.close();
+
+    std::ofstream file2("Teams_table.txt");
+    for (auto& team : teams) {
+        file2 << "name:" << team.get_name() << ";\n";
+    }
+    file2.close();
+
+    std::ofstream file3("Trainers_table.txt");
+    for (auto& trainer : trainers) {
+        file3 << "Name:" << trainer.get_name() << ";";
+        file3 << "\n";
+    }
+    file3.close();
+}
 
 
 //main function
@@ -462,11 +539,15 @@ int main() {
         std::cout << "File Trainers_table.txt loaded.\n";
     }
 
-    
+    team_none = new Team("No_team", std::vector<Player*>{}, nullptr);  // Using global
 
     //loop
     while (true) {
         menu_event();
     }
+    
+    //writing files
+    
+
     return 0;
 }

@@ -3,7 +3,7 @@
 #include <string>
 
 //default constructor
-Trainer::Trainer(std::string name) : name(name) {}
+Trainer::Trainer(const std::string& name) : name(name) {}
 
 /// default destructor
 Trainer::~Trainer() {}
