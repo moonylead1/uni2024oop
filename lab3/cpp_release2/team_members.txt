@@ -1,0 +1,9 @@
+
+
+Coach;Gragas;01.01.1982;123;BEER-EXTENDER
+Player;Draven;12.12.1991;123  
+Player;Jhin;04.08.1987;123
+Player;Rammus;25.05.1990;123
+Player;Fizz;30.06.2001;123
+Coach;Singed;14.07.1975;123 
+Coach;Twisted Fate;03.11.1983;123
