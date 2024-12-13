@@ -12,7 +12,7 @@ public:
     Player(const std::string& name, const std::string& birthdate, int goals);
 
     std::string getType() const override;
-    int getGoals() const { return goals; };
+    int getGoals() const;
     
     std::string getDetailsForSave() const override;
 };
