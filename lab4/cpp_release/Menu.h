@@ -6,11 +6,11 @@
 class Menu {
 private:
     Team team;
-    Team onDutyTeam;
-
+    std::vector<Player*> onDutyPlayers;
 public:
     //void displayMainMenu();
     void run();
+    void showOnDutyPlayers() const;
 
 private:
     void displayMenuOptions();

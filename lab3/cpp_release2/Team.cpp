@@ -126,9 +126,8 @@ void Team::findYoungestOldestPlayer() {
         return;
     }
 
-    // More robust comparison using a custom function
     auto compare_birthdate = [](const Player* a, const Player* b) {
-        // Adjust for 1900-based year representation in std::tm
+        // 1900-based in std::tm
         int year_a = a->getBirthdate().tm_year + 1900;
         int year_b = b->getBirthdate().tm_year + 1900;
         
@@ -152,7 +151,7 @@ void Team::findYoungestOldestPlayer() {
     // Find oldest (earliest birthdate)
     auto oldest = *std::max_element(players.begin(), players.end(), compare_birthdate);
 
-    // Detailed output
+    // output
     std::cout << "\n--- Youngest and Oldest Players ---" << std::endl;
     
     // Youngest Player details
@@ -161,7 +160,6 @@ void Team::findYoungestOldestPlayer() {
     
     char buffer[80];
     std::tm youngest_tm = youngest->getBirthdate();
-    // Adjusted format to match your input/output expectation
     std::strftime(buffer, sizeof(buffer), "%d.%m.%Y", &youngest_tm);
     std::cout << "Birthdate: " << buffer << std::endl;
     
