@@ -1,62 +1,63 @@
 [
   {
-    "type": "Гравець",
-    "name": "Іван Петров",
+    "type": "Player",
+    "name": "Ivan Petrov",
     "birthdate": "15.03.1995",
     "goals": 45
   },
   {
-    "type": "Гравець",
-    "name": "Олег Сидоренко",
+    "type": "Player",
+    "name": "Oleg Sidorov",
     "birthdate": "22.11.1992",
-    "goals": 67
+    "goals": 67,
+    "selected_for_game": true
   },
   {
-    "type": "Тренер",
-    "name": "Микола Іванович",
+    "type": "Coach",
+    "name": "Mykola Ivanovych",
     "birthdate": "10.06.1975",
-    "category": "Вища"
+    "category": "Higher"
   },
   {
-    "type": "Гравець",
-    "name": "Андрій Мельник",
+    "type": "Player",
+    "name": "Andriy Melnyk",
     "birthdate": "05.09.1998",
     "goals": 23
   },
   {
-    "type": "Тренер",
-    "name": "Сергій Петрович",
+    "type": "Coach",
+    "name": "Sergiy Petrovych",
     "birthdate": "30.12.1980",
-    "category": "Перша"
+    "category": "First"
   },
   {
-    "type": "Тренер",
-    "name": "Віктор Бун",
+    "type": "Coach",
+    "name": "Viktor Bun",
     "birthdate": "13.12.1950",
-    "category": "Відсутня"
+    "category": "Unknown"
   },
   {
-    "type": "Гравець",
-    "name": "Роман Шипшина",
+    "type": "Player",
+    "name": "Roman Shipshin",
     "birthdate": "13.04.2000",
     "goals": "65"
   },
   {
-    "type": "Гравець",
-    "name": "Іван Морозов",
+    "type": "Player",
+    "name": "Ivan Morozov",
     "birthdate": "30.01.2000",
     "goals": "43"
   },
   {
-    "type": "Гравець",
-    "name": "Іван",
+    "type": "Player",
+    "name": "Ivan",
     "birthdate": "13.04.1991",
     "goals": "40"
   },
   {
-    "type": "Тренер",
-    "name": "Роман",
+    "type": "Coach",
+    "name": "Roman",
     "birthdate": "14.08.1999",
-    "category": "Середня"
+    "category": "Middle"
   }
 ]

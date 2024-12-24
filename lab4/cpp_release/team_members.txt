@@ -1,9 +1,0 @@
-Coach;Lissandra;19.08.1980;High
-Player;Ahri;19.09.2004;32
-Player;Gragas;19.03.2009;32
-Player;Smolder;19.03.2023;45
-Player;Olexandr;13.03.2005;32
-Coach;Roman;15.06.1987;Middle
-Player;Gekko;18.03.2003;67
-Player;Zero;23.12.2004;54
-Coach;Hero;14.09.2000;Low
