@@ -1,0 +1,63 @@
+[
+  {
+    "type": "Player",
+    "name": "Ivan Petrov",
+    "birthdate": "15.03.1995",
+    "goals": 45
+  },
+  {
+    "type": "Player",
+    "name": "Oleg Sidorov",
+    "birthdate": "22.11.1992",
+    "goals": 67,
+    "selected_for_game": true
+  },
+  {
+    "type": "Coach",
+    "name": "Mykola Ivanovych",
+    "birthdate": "10.06.1975",
+    "category": "Higher"
+  },
+  {
+    "type": "Player",
+    "name": "Andriy Melnyk",
+    "birthdate": "05.09.1998",
+    "goals": 23
+  },
+  {
+    "type": "Coach",
+    "name": "Sergiy Petrovych",
+    "birthdate": "30.12.1980",
+    "category": "First"
+  },
+  {
+    "type": "Coach",
+    "name": "Viktor Bun",
+    "birthdate": "13.12.1950",
+    "category": "Unknown"
+  },
+  {
+    "type": "Player",
+    "name": "Roman Shipshin",
+    "birthdate": "13.04.2000",
+    "goals": "65"
+  },
+  {
+    "type": "Player",
+    "name": "Ivan Morozov",
+    "birthdate": "30.01.2000",
+    "goals": "43"
+  },
+  {
+    "type": "Player",
+    "name": "Ivan",
+    "birthdate": "13.04.1991",
+    "goals": "40"
+  },
+  {
+    "type": "Coach",
+    "name": "Roman",
+    "birthdate": "14.08.1999",
+    "category": "Middle"
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "type": "Player",
+    "name": "Initial Player",
+    "birthdate": "01.01.1990",
+    "goals": 10
+  }
+]

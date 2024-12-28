@@ -125,43 +125,75 @@ void Team::validateCategory(const std::string& category) {
 }
 
 void Team::loadMembers() {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Could not open file: " << filename << std::endl;
-        return;
+    if (!acquireLock()) {
+        throw TeamError("Could not acquire file lock for loading");
     }
-
-    std::string line;
-    while (std::getline(file, line)) {
-        std::istringstream ss(line);
-        std::string type, name, birthdateStr, additional;
-        
-        // Ensure we can parse all components
-        if (!(std::getline(ss, type, ';') && 
-              std::getline(ss, name, ';') && 
-              std::getline(ss, birthdateStr, ';') && 
-              std::getline(ss, additional))) {
-            std::cerr << "Malformed line: " << line << std::endl;
-            continue;
+    
+    try {
+        std::ifstream file(filename.c_str());
+        if (!file.is_open()) {
+            releaseLock();
+            throw FileLoadError(filename);
         }
 
-        if (type == "Player") {
-            try {
-                int goals = std::stoi(additional);
-                members.push_back(new Player(name, birthdateStr, goals));
-            } catch (const std::exception& e) {
-                std::cerr << "Error parsing player: " << e.what() << std::endl;
+        // Clear existing members
+        for (auto member : members) {
+            delete member;
+        }
+        members.clear();
+
+        std::string line;
+        while (std::getline(file, line)) {
+            std::istringstream ss(line);
+            std::string type, name, birthdateStr, additional;
+            
+            if (!(std::getline(ss, type, ';') && 
+                  std::getline(ss, name, ';') && 
+                  std::getline(ss, birthdateStr, ';') && 
+                  std::getline(ss, additional))) {
+                continue;
             }
-        } else if (type == "Coach") {
-            members.push_back(new Coach(name, birthdateStr, additional));
+
+            if (type == "Player") {
+                try {
+                    int goals = std::stoi(additional);
+                    members.push_back(new Player(name, birthdateStr, goals));
+                } catch (const std::exception& e) {
+                    std::cerr << "Error parsing player: " << e.what() << std::endl;
+                }
+            } else if (type == "Coach") {
+                members.push_back(new Coach(name, birthdateStr, additional));
+            }
         }
+        
+        releaseLock();
+    } catch (...) {
+        releaseLock();
+        throw;
     }
 }
 
 void Team::saveMembers() {
-    std::ofstream file(filename);
-    for (const auto& member : members) {
-        file << member->getDetailsForSave() << std::endl;
+    if (!acquireLock()) {
+        throw TeamError("Could not acquire file lock for saving");
+    }
+    
+    try {
+        std::ofstream file(filename.c_str());
+        if (!file.is_open()) {
+            releaseLock();
+            throw FileLoadError(filename);
+        }
+        
+        for (const auto& member : members) {
+            file << member->getDetailsForSave() << std::endl;
+        }
+        file.close();
+        
+        releaseLock();
+    } catch (...) {
+        releaseLock();
+        throw;
     }
 }
 

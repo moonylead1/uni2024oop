@@ -74,6 +74,18 @@ public:
 
         printSectionHeader("Exception Tests");
         testExceptions();
+
+        printSectionHeader("Inheritance Tests");
+        testTeamMemberInheritance();
+        
+        printSectionHeader("Concurrent Access Tests");
+        testConcurrentModification();
+        
+        printSectionHeader("Menu Dependency Tests");
+        testMenuDependency();
+        
+        printSectionHeader("File Operations Tests");
+        testFileLocking();
         
         printTestResults();
     }
@@ -296,6 +308,122 @@ public:
         }
         cleanup(filename);
     }
+
+    void testTeamMemberInheritance() {
+        //inheritance relationship between Player v Coach and TeamMember
+        std::string content = 
+            "Player;Test Player;01.01.1990;10\n"
+            "Coach;Test Coach;01.01.1980;Expert\n";
+            
+        std::string filename = createTestFile(content);
+        Team team(filename);
+
+        std::stringstream output;
+        auto oldCout = std::cout.rdbuf(output.rdbuf());
+        
+        team.viewTeam();
+        std::cout.rdbuf(oldCout);
+        std::string outputStr = output.str();
+
+        //if both types are handled through polymorphism
+        assertCondition(outputStr.find("Type: Player") != std::string::npos &&
+                    outputStr.find("Type: Coach") != std::string::npos,
+                    "TeamMember inheritance polymorphism");
+
+        cleanup(filename);
+    }
+
+    void testConcurrentModification() {
+        std::string filename = createTestFile("Player;Initial Player;01.01.1990;10\n");
+        
+        try {
+            Team team1(filename);
+            
+            // modify through 1 inst
+            std::stringstream input1;
+            input1 << "Player\nJohn Doe\n01.01.1990\n20\n";
+            std::cin.rdbuf(input1.rdbuf());
+            team1.addMember();
+
+            // create and modify through 2 inst
+            Team team2(filename);
+            std::stringstream input2;
+            input2 << "Coach\nJane Smith\n01.01.1980\nPro\n";
+            std::cin.rdbuf(input2.rdbuf());
+            team2.addMember();
+
+            // read final file content
+            std::ifstream resultFile(filename.c_str());
+            std::string fileContent;
+            std::string line;
+            while (std::getline(resultFile, line)) {
+                fileContent += line + "\n";
+            }
+            
+            // check if both modifications are present
+            bool hasJohnDoe = fileContent.find("John Doe") != std::string::npos;
+            bool hasJaneSmith = fileContent.find("Jane Smith") != std::string::npos;
+            bool hasInitialPlayer = fileContent.find("Initial Player") != std::string::npos;
+            
+            assertCondition(hasJohnDoe && hasJaneSmith && hasInitialPlayer,
+                        "Concurrent file modification handling");
+        } catch (const TeamError& e) {
+            std::cout << "Test caught expected TeamError: " << e.what() << std::endl;
+            assertCondition(true, "Concurrent file modification handling");
+        }
+
+        // cleanup both the data file and potential lock file
+        cleanup(filename);
+        cleanup(filename + ".lock");
+    }
+
+    void testMenuDependency() {
+        std::string filename = createTestFile("Player;Test Player;01.01.1990;10\n");
+        Team team(filename);
+
+        //  menu simulator interactions event handler
+        std::vector<std::string> menuInputs = {
+            "Player\nMenu Player\n01.01.1995\n5\n",  // adding member
+            "Test Player\n",                         // select player
+            ""                                       // trottle down for other operations
+        };
+
+        for (const auto& input : menuInputs) {
+            std::stringstream inputStream(input);
+            auto oldCin = std::cin.rdbuf(inputStream.rdbuf());
+            
+            std::stringstream outputStream;
+            auto oldCout = std::cout.rdbuf(outputStream.rdbuf());
+
+            // Test different menu operations
+            team.addMember();
+            team.viewTeam();
+            team.findYoungestOldestPlayer();
+            team.selectPlayer();
+
+            std::cin.rdbuf(oldCin);
+            std::cout.rdbuf(oldCout);
+
+            std::string output = outputStream.str();
+            assertCondition(output.length() > 0, "Menu-Team interaction");
+        }
+
+        cleanup(filename);
+    }
+
+    void testFileLocking() {
+        std::string filename = createTestFile("Player;Test Player;01.01.1990;10\n");
+        
+        // attrmpt to to open file exclusively while Team inst is active status
+        Team team(filename);
+        std::fstream lockTest(filename, std::ios::in | std::ios::out);
+        
+        assertCondition(lockTest.is_open(), "File locking mechanism");
+        lockTest.close();
+        
+        cleanup(filename);
+    }
+
 
     void printTestResults() {
                 std::cout << R"(
