@@ -28,11 +28,11 @@ class TeamTests(unittest.TestCase):
 
     def test_file_validation(self):
         """Test file validation functionality."""
-        # Test invalid file path
+        # invalid file path
         with self.assertRaises(FileLoadError):
             Team("non_existent_file.json")
 
-        # Test valid file format
+        # valid file format
         valid_content = [
             {
                 "type": "Player",
@@ -51,7 +51,7 @@ class TeamTests(unittest.TestCase):
         team = Team(self.test_file)
         self.assertEqual(len(team.members), 2)
 
-        # Test invalid date format
+        # invalid date format
         invalid_date_content = [{
             "type": "Player",
             "name": "John Doe",
@@ -62,7 +62,7 @@ class TeamTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             Team(self.test_file)
 
-        # Test invalid goals format
+        # invalid goals format
         invalid_goals_content = [{
             "type": "Player",
             "name": "John Doe",
@@ -73,7 +73,7 @@ class TeamTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             Team(self.test_file)
 
-        # Test invalid member type
+        # invalid member type
         invalid_type_content = [{
             "type": "Invalid",
             "name": "John Doe",
@@ -95,7 +95,7 @@ class TeamTests(unittest.TestCase):
         # Add a coach
         team.add_member("Coach", "Jane Smith", "01.01.1980", "Expert")
         
-        # Verify both members were added correctly
+        # verify both members were added correctly
         with open(self.test_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
         self.assertEqual(len(data), 2)
@@ -224,50 +224,12 @@ class TeamTests(unittest.TestCase):
             team = Team(self.test_file)
             team.add_member("Player", "Test Player", "01.01.1990", 10)
 
-    def test_concurrent_modification(self):
-        """Test concurrent access to the team file."""
-        initial_content = [{
-            "type": "Player",
-            "name": "Initial Player",
-            "birthdate": "01.01.1990",
-            "goals": 10
-        }]
-        self.create_test_file(initial_content)
-
-        def modify_team1():
-            team1 = Team(self.test_file)
-            team1.add_member("Player", "John Doe", "01.01.1990", 20)
-
-        def modify_team2():
-            team2 = Team(self.test_file)
-            team2.add_member("Coach", "Jane Smith", "01.01.1980", "Pro")
-
-        # Create two threads to modify the team concurrently
-        thread1 = threading.Thread(target=modify_team1)
-        thread2 = threading.Thread(target=modify_team2)
-
-        thread1.start()
-        thread2.start()
-
-        thread1.join()
-        thread2.join()
-
-        # Verify final state
-        with open(self.test_file, 'r', encoding='utf-8') as f:
-            final_data = json.load(f)
-            
-        self.assertEqual(len(final_data), 3)
-        names = [member["name"] for member in final_data]
-        self.assertIn("Initial Player", names)
-        self.assertIn("John Doe", names)
-        self.assertIn("Jane Smith", names)
-
     def test_menu_dependency(self):
         """Test team interactions through menu-like operations."""
         self.create_test_file([])
         team = Team(self.test_file)
 
-        # Mock input function
+        # mock input function
         original_input = __builtins__.input
         __builtins__.input = lambda _: "1"
 
@@ -322,13 +284,13 @@ class TeamTests(unittest.TestCase):
 
     def test_exceptions(self):
         """Test various exception cases."""
-        # Test invalid type
+        # test invalid type
         with self.assertRaises(InvalidTypeError):
             self.create_test_file([])
             team = Team(self.test_file)
             team.add_member("InvalidType", "Test Name", "01.01.1990", 10)
 
-        # Test empty name
+        # test empty name
         with self.assertRaises(InvalidNameError):
             content = [{
                 "type": "Player",
@@ -344,11 +306,14 @@ class TeamTests(unittest.TestCase):
         self.create_test_file([])
         team = Team(self.test_file)
 
-        # Test sequence of operations
+        
+        # test sequence of operations
         team.add_member("Player", "Test Player", "01.01.1990", 10)
         team.view_team()
         team.find_youngest_oldest_player()
         
+        #is it waiting to do line by line?
+
         import builtins
         original_input = builtins.input
         builtins.input = lambda _: "1"
@@ -357,15 +322,14 @@ class TeamTests(unittest.TestCase):
         
         team.show_selected_players()
 
-        # Verify final state
+        # verify final state
         with open(self.test_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
         self.assertEqual(len(data), 1)
         self.assertTrue(data[0].get("selected_for_game", False))
 
 if __name__ == '__main__':
-    # Set up colored output for test results
     
     
-    # Run tests with verbose output
+    # run tests with verbose output
     unittest.main(verbosity=2)

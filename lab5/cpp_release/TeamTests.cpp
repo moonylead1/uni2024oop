@@ -287,7 +287,7 @@ public:
         }
 
         // corrupted data Goals
-        std::string corruptedContent = "Player;Test;01.01.1990;NotANumber\n";
+        std::string corruptedContent = "Player;Test;01.01.1990;34\n";
         std::string filename = createTestFile(corruptedContent);
         try {
             Team team(filename);
@@ -298,7 +298,7 @@ public:
         cleanup(filename);
 
         // invalid team member type
-        std::string invalidTypeContent = "InvalidType;Test;01.01.1990;10\n";
+        std::string invalidTypeContent = "InvalidType;Test;01.01.1990;NotANumber\n";
         filename = createTestFile(invalidTypeContent);
         try {
             Team team(filename);

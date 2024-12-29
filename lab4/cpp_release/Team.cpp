@@ -104,6 +104,12 @@ void Team::validateName(const std::string& name) {
     // we can also produce more checks here
 }
 
+/**
+ * Validates a given string representing the number of goals a player has scored.
+ * Checks that the string can be converted to an integer and that the number is not negative.
+ * Throws an InvalidGoalsError if the string cannot be converted to an integer, or if the number is negative.
+ * @param goalsStr a string representing the number of goals scored
+ */
 void Team::validateGoals(const std::string& goalsStr) {
     try {
         int goals = std::stoi(goalsStr);
