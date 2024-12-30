@@ -9,9 +9,9 @@
 class BasicUserDisplay : public UserDisplayStrategy {
 public:
     void display(const User& user) const override {
-        std::cout << "------Basic User Display------ \n" << user.get_name() << std::endl;
-        std::cout << "ID: " << user.get_id() << std::endl;
-        std::cout << "Status: " << user.get_status() << std::endl;
+        std::cout << "------Basic User Display------ \n";
+        std::cout << "ID: " << user.getId() << std::endl;
+        std::cout << "Status: " << user.getStatus() << std::endl;
     }
 };
 

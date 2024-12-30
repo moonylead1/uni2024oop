@@ -8,7 +8,7 @@
 class SearchByEmail : public UserSearchStrategy {
 public:
     bool matches(const User& user, const std::string& searchTerm) const override {
-        return user.get_email().find(searchTerm) != std::string::npos;
+        return user.getEmail().find(searchTerm) != std::string::npos;
     }
 }; 
 

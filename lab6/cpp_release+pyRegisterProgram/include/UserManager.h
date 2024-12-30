@@ -15,6 +15,7 @@
 #include <memory>
 #include <vector>
 #include <fstream>
+#include <iostream>
 #include "json.hpp"
 
 using json = nlohmann::json;
@@ -28,9 +29,9 @@ private:
 
     std::vector<User> createDefaultUsers() const {
         std::vector<User> defaultUsers;
-        defaultUsers.push_back(User("001", "Ivan", "ivan@example.com", "Admin"));
-        defaultUsers.push_back(User("002", "Maria", "maria@example.com", "User"));
-        defaultUsers.push_back(User("003", "Petro", "petro@example.com", "Manager"));
+        defaultUsers.push_back(User("001", "Ivan", "ivan@example.com", "Admin", "up"));
+        defaultUsers.push_back(User("002", "Maria", "maria@example.com", "User", "up"));
+        defaultUsers.push_back(User("003", "Petro", "petro@example.com", "Manager", "down"));
         return defaultUsers;
     }
 public:
@@ -50,9 +51,9 @@ public:
 
 
     bool addUser(const std::string& id, const std::string& name, 
-                const std::string& email, const std::string& role) {
+                const std::string& email, const std::string& role, const std::string& status) {
         try {
-            users.push_back(User(id, name, email, role));
+            users.push_back(User(id, name, email, role, status));
             return saveUsersToJson();
         } catch (const std::exception& e) {
             std::cerr << "Error adding user: " << e.what() << std::endl;

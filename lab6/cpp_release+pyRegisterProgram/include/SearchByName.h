@@ -8,7 +8,7 @@
 class SearchByName : public UserSearchStrategy {
 public:
     bool matches(const User& user, const std::string& searchTerm) const override {
-        return user.get_name().find(searchTerm) != std::string::npos;
+        return user.getName().find(searchTerm) != std::string::npos;
     }
 }; 
 

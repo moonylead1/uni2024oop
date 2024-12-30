@@ -8,7 +8,7 @@
 class SearchById : public UserSearchStrategy {
 public:
     bool matches(const User& user, const std::string& searchTerm) const override {
-        return user.get_id() == searchTerm;
+        return user.getId() == searchTerm;
     }
 }; 
 

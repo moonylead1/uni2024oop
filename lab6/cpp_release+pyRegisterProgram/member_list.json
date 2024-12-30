@@ -1,0 +1,44 @@
+[
+    {
+        "id": "009",
+        "name": "John_Doe",
+        "email": "G5u9W@example.com",
+        "role": "admin",
+        "status": "up"
+    },
+    {
+        "id": "010",
+        "name": "Jane_Doe",
+        "email": "a5h7@example.com",
+        "role": "admin",
+        "status": "down"
+    },
+    {
+        "id": "011",
+        "name": "Bob_Smith",
+        "email": "K8a2@example.com",
+        "role": "user",
+        "status": "blocked"
+    },
+    {
+        "id": "012",
+        "name": "Alice_Walker",
+        "email": "K2b7@example.com",
+        "role": "user",
+        "status": "up"
+    },
+    {
+        "id": "013",
+        "name": "John_Smith",
+        "email": "R9v8@example.com",
+        "role": "user",
+        "status": "down"
+    },
+    {
+        "id": "001",
+        "name": "Ivan",
+        "email": "ivan@gmail.com",
+        "role": "admin",
+        "status": "down"
+    }
+]
